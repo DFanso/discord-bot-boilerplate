@@ -130,3 +130,4 @@ dist
 .pnp.*
 src/config.json
 src/commands/.DS_Store
+.DS_Store
