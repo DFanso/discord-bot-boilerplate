@@ -29,7 +29,7 @@ A boilerplate for building Discord bots using TypeScript, Discord.js, and Node.j
 1. Clone the repository:
    ```sh
    git clone https://github.com/DFanso/discord-bot-boilerplate.git
-   cd your-repo
+   cd discord-bot-boilerplate
    ```
 
 2. Install the dependencies:
