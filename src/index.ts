@@ -1,12 +1,31 @@
-import express from 'express';
+import { Client, GatewayIntentBits } from 'discord.js';
+import fs from 'fs';
+import path from 'path';
+import config from './config.json';
 
-const app = express();
-const port = 3000;
+const { token } = config;
 
-app.get('/', (req, res) => {
-  res.send('Hello World!');
+const client = new Client({
+  intents: [
+    GatewayIntentBits.Guilds,
+    GatewayIntentBits.MessageContent,
+    GatewayIntentBits.GuildMessageReactions,
+    GatewayIntentBits.GuildIntegrations,
+    GatewayIntentBits.GuildMessages,
+    GatewayIntentBits.DirectMessages,
+    GatewayIntentBits.GuildMembers,
+    GatewayIntentBits.GuildVoiceStates,
+    GatewayIntentBits.AutoModerationExecution,
+    GatewayIntentBits.GuildIntegrations,
+  ],
 });
 
-app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`);
-});
+// Dynamically read event files
+const eventFiles = fs.readdirSync(path.join(__dirname, 'events')).filter(file => file.endsWith('.ts'));
+
+for (const file of eventFiles) {
+  const event = require(path.join(__dirname, 'events', file));
+  client.on(event.name, (...args) => event.execute(...args, client));
+}
+
+client.login(token);
