@@ -55,6 +55,12 @@ Create a `config.json` file in the `src` directory with the following structure:
 
 Replace `YOUR_BOT_TOKEN` and `YOUR_CLIENT_ID` with your actual Discord bot token and client ID.
 
+Rename `.env.example` file to `.env` and add the `MONGO_URI`:
+
+```env
+MONGO_URI=mongodb+srv://<username>:<password>@cluster0.mongodb.net/<dbname>?retryWrites=true&w=majority
+```
+
 ## Usage
 
 To start the bot, run:
@@ -68,14 +74,21 @@ This will use `nodemon` to watch for file changes and automatically restart the 
 ## Project Structure
 
 ```
-my-project/
+discord-bot-boilerplate/
 ├── src/
 │   ├── commands/
 │   │   └── exampleCommand.ts
 │   ├── events/
 │   │   └── ready.ts
 │   ├── services/
-│   │   └── roleManager.ts
+│   │   └── UserService.ts
+|   ├── models/
+│   │   └── user.ts
+│   ├── dto/
+│   │   └── UserDTO.ts
+│   ├── utils/
+|   |   └── deploy.ts
+│   │   └── database.ts
 │   ├── config.json
 │   └── index.ts
 ├── package.json
@@ -86,6 +99,8 @@ my-project/
 - **commands/**: Directory for command files.
 - **events/**: Directory for event files.
 - **services/**: Directory for additional services.
+- **dtos/**: Directory for Data Transfer Objects.
+- **utils/**: Directory for utility files, such as database connection.
 - **config.json**: Configuration file containing the bot token and client ID.
 - **index.ts**: Entry point of the bot.
 

@@ -2,6 +2,9 @@ import { Client, GatewayIntentBits } from 'discord.js';
 import fs from 'fs';
 import path from 'path';
 import config from './config.json';
+import connectDB from './utils/database';
+import dotenv from 'dotenv';
+dotenv.config();
 
 const { token } = config;
 
@@ -27,5 +30,7 @@ for (const file of eventFiles) {
   const event = require(path.join(__dirname, 'events', file));
   client.on(event.name, (...args) => event.execute(...args, client));
 }
+
+connectDB(); //db connect
 
 client.login(token);
