@@ -6,7 +6,7 @@ import connectDB from './utils/database';
 import dotenv from 'dotenv';
 dotenv.config();
 
-const { token } = config;
+const { TOKEN } = config;
 
 const client = new Client({
   intents: [
@@ -33,4 +33,4 @@ for (const file of eventFiles) {
 
 connectDB(); //db connect
 
-client.login(token);
+client.login(TOKEN);
