@@ -4,7 +4,7 @@ import fs from 'fs';
 import path from 'path';
 import config from '../config.json';
 
-const { clientId, token } = config;
+const { CLIENT_ID, TOKEN } = config;
 
 interface Command {
   data: {
@@ -37,14 +37,14 @@ for (const folder of commandFolders) {
   }
 }
 
-const rest = new REST({ version: '9' }).setToken(token);
+const rest = new REST({ version: '9' }).setToken(TOKEN);
 
 (async () => {
   try {
     console.log(`Started refreshing ${commands.length} application (/) commands.`);
 
     const data: any = await rest.put(
-      Routes.applicationCommands(clientId), // Change this line for global commands
+      Routes.applicationCommands(CLIENT_ID), // Change this line for global commands
       { body: commands },
     );
 
