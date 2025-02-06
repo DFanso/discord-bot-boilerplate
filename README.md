@@ -59,6 +59,7 @@ Rename `.env.example` file to `.env` and add the `MONGO_URI`:
 
 ```env
 MONGO_URI=mongodb+srv://<username>:<password>@cluster0.mongodb.net/<dbname>?retryWrites=true&w=majority
+NODE_ENV=development //chanege this to production after the build
 ```
 
 ## Usage

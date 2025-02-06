@@ -24,7 +24,12 @@ const client = new Client({
 });
 
 // Dynamically read event files
-const eventFiles = fs.readdirSync(path.join(__dirname, 'events')).filter(file => file.endsWith('.ts'));
+const isDevelopment = process.env.NODE_ENV === 'development';
+const fileExtension = isDevelopment ? '.ts' : '.js';
+
+const eventFiles = fs
+  .readdirSync(path.join(__dirname, 'events'))
+  .filter((file) => file.endsWith(fileExtension));
 
 for (const file of eventFiles) {
   const event = require(path.join(__dirname, 'events', file));
