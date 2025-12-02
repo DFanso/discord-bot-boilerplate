@@ -1,14 +1,14 @@
 # Discord Bot Boilerplate
 
-![Node.js](https://img.shields.io/badge/node.js-v20-green)
+![Bun](https://img.shields.io/badge/Bun-v1.1-black)
 ![Discord.js](https://img.shields.io/badge/discord.js-v14-blue)
-![TypeScript](https://img.shields.io/badge/typescript-v4.5-blue)
+![TypeScript](https://img.shields.io/badge/typescript-v5-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)
 ![Issues](https://img.shields.io/github/issues/DFanso/discord-bot-boilerplate)
 ![Forks](https://img.shields.io/github/forks/DFanso/discord-bot-boilerplate)
 ![Stars](https://img.shields.io/github/stars/DFanso/discord-bot-boilerplate)
 
-A boilerplate for building Discord bots using TypeScript, Discord.js, and Node.js.
+A boilerplate for building Discord bots using TypeScript, Discord.js, and Bun.
 
 ## Table of Contents
 
@@ -19,7 +19,7 @@ A boilerplate for building Discord bots using TypeScript, Discord.js, and Node.j
   - [Usage](#usage)
   - [Project Structure](#project-structure)
   - [Commands and Events](#commands-and-events)
-    - [Example Command (`src/commands/exampleCommand.ts`)](#example-command-srccommandsexamplecommandts)
+    - [Example Command (`src/commands/hello.ts`)](#example-command-srccommandshellots)
     - [Example Event (`src/events/ready.ts`)](#example-event-srceventsreadyts)
   - [Contributing](#contributing)
   - [License](#license)
@@ -34,43 +34,45 @@ A boilerplate for building Discord bots using TypeScript, Discord.js, and Node.j
 
 2. Install the dependencies:
    ```sh
-   yarn install
-   ```
-
-3. Compile the TypeScript code:
-   ```sh
-   yarn build
+   bun install
    ```
 
 ## Configuration
 
-Create a `config.json` file in the `src` directory with the following structure:
-
-```json
-{
-  "token": "YOUR_BOT_TOKEN",
-  "clientId": "YOUR_CLIENT_ID"
-}
-```
-
-Replace `YOUR_BOT_TOKEN` and `YOUR_CLIENT_ID` with your actual Discord bot token and client ID.
-
-Rename `.env.example` file to `.env` and add the `MONGO_URI`:
+Rename `.env.example` file to `.env` and add your configuration:
 
 ```env
 MONGO_URI=mongodb+srv://<username>:<password>@cluster0.mongodb.net/<dbname>?retryWrites=true&w=majority
-NODE_ENV=development //chanege this to production after the build
+TOKEN=YOUR_BOT_TOKEN
+CLIENT_ID=YOUR_CLIENT_ID
+NODE_ENV=development
 ```
 
 ## Usage
 
-To start the bot, run:
+To start the bot in development mode (with hot reload):
 
 ```sh
-yarn start
+bun run dev
 ```
 
-This will use `nodemon` to watch for file changes and automatically restart the bot.
+To start the bot in production mode:
+
+```sh
+bun run start:prod
+```
+
+To register slash commands:
+
+```sh
+bun run deploy
+```
+
+To check for type errors:
+
+```sh
+bun run typecheck
+```
 
 ## Project Structure
 
@@ -78,19 +80,18 @@ This will use `nodemon` to watch for file changes and automatically restart the 
 discord-bot-boilerplate/
 ├── src/
 │   ├── commands/
-│   │   └── exampleCommand.ts
+│   │   └── hello.ts
 │   ├── events/
 │   │   └── ready.ts
 │   ├── services/
 │   │   └── UserService.ts
-|   ├── models/
+│   ├── models/
 │   │   └── user.ts
 │   ├── dto/
 │   │   └── UserDTO.ts
 │   ├── utils/
-|   |   └── deploy.ts
+│   │   └── deploy.ts
 │   │   └── database.ts
-│   ├── config.json
 │   └── index.ts
 ├── package.json
 ├── tsconfig.json
@@ -102,7 +103,6 @@ discord-bot-boilerplate/
 - **services/**: Directory for additional services.
 - **dtos/**: Directory for Data Transfer Objects.
 - **utils/**: Directory for utility files, such as database connection.
-- **config.json**: Configuration file containing the bot token and client ID.
 - **index.ts**: Entry point of the bot.
 
 ## Commands and Events
@@ -110,33 +110,32 @@ discord-bot-boilerplate/
 - Commands are stored in the `src/commands` directory and must export a `data` property with command metadata and an `execute` function.
 - Events are stored in the `src/events` directory and must export a `name` and `execute` function.
 
-### Example Command (`src/commands/exampleCommand.ts`)
+### Example Command (`src/commands/hello.ts`)
 
 ```typescript
-import { CommandInteraction } from 'discord.js';
+import { SlashCommandBuilder, ChatInputCommandInteraction } from 'discord.js';
 
-module.exports = {
-  data: {
-    name: 'example',
-    description: 'Example command'
+export default {
+  data: new SlashCommandBuilder()
+    .setName('hello')
+    .setDescription('Replies with Hello!'),
+  async execute(interaction: ChatInputCommandInteraction) {
+    await interaction.reply('Hello!');
   },
-  async execute(interaction: CommandInteraction) {
-    await interaction.reply('Hello from the example command!');
-  }
 };
 ```
 
 ### Example Event (`src/events/ready.ts`)
 
 ```typescript
-import { Client } from 'discord.js';
+import { Client, Events } from 'discord.js';
 
-module.exports = {
-  name: 'ready',
+export default {
+  name: Events.ClientReady,
   once: true,
   execute(client: Client) {
     console.log(`${client.user?.tag} is online!`);
-  }
+  },
 };
 ```
 

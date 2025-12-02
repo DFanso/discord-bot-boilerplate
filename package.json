@@ -4,13 +4,13 @@
   "description": "my personal boiler plate for crafting discord bots.",
   "main": "index.ts",
   "scripts": {
-    "build": "tsc",
+    "typecheck": "tsc --noEmit",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
-    "start": "node -r @swc-node/register src/index.ts",
-    "deploy": "ts-node src/utils/deploy.ts",
+    "start": "bun src/index.ts",
+    "deploy": "bun src/utils/deploy.ts",
     "dev": "nodemon",
     "start:debug": "nest start --debug --watch",
-    "start:prod": "node dist/main",
+    "start:prod": "bun src/index.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "dfanso",

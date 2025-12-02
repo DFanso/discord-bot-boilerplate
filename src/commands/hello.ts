@@ -3,7 +3,7 @@ import User from '../models/user';
 import UserService from '../services/userService';
 import { UserDTO } from '../dto/userDto';
 
-module.exports = {
+export default {
   data: new SlashCommandBuilder()
     .setName('hello')
     .setDescription('Replies with Hello!'),

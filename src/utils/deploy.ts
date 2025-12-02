@@ -21,30 +21,32 @@ const commands: any[] = [];
 const commandFoldersPath = path.join(__dirname, '../commands');
 const commandFolders = fs.readdirSync(commandFoldersPath);
 
-for (const folder of commandFolders) {
-  const commandsPath = path.join(commandFoldersPath, folder);
+(async () => {
+  for (const folder of commandFolders) {
+    const commandsPath = path.join(commandFoldersPath, folder);
 
-  // Check if the path is a directory before proceeding
-  if (fs.statSync(commandsPath).isDirectory()) {
-    const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.ts'));
-    for (const file of commandFiles) {
-      const command: Command = require(path.join(commandsPath, file));
+    // Check if the path is a directory before proceeding
+    if (fs.statSync(commandsPath).isDirectory()) {
+      const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.ts') || file.endsWith('.js'));
+      for (const file of commandFiles) {
+        const module = await import(path.join(commandsPath, file));
+        const command: Command = module.default || module;
+        if (command.data) {
+          commands.push(command.data.toJSON());
+        }
+      }
+    } else if (commandsPath.endsWith('.ts') || commandsPath.endsWith('.js')) {
+      // Handle files directly inside the 'commands' directory
+      const module = await import(commandsPath);
+      const command: Command = module.default || module;
       if (command.data) {
         commands.push(command.data.toJSON());
       }
     }
-  } else if (commandsPath.endsWith('.ts')) {
-    // Handle files directly inside the 'commands' directory
-    const command: Command = require(commandsPath);
-    if (command.data) {
-      commands.push(command.data.toJSON());
-    }
   }
-}
 
-const rest = new REST({ version: '10' }).setToken(TOKEN);
+  const rest = new REST({ version: '10' }).setToken(TOKEN);
 
-(async () => {
   try {
     console.log(`Started refreshing ${commands.length} application (/) commands.`);
 
