@@ -4,7 +4,7 @@
   "description": "my personal boiler plate for crafting discord bots.",
   "main": "index.ts",
   "scripts": {
-    "build": "tsc",
+    "typecheck": "tsc --noEmit",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "bun src/index.ts",
     "deploy": "bun src/utils/deploy.ts",

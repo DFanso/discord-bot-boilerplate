@@ -31,18 +31,19 @@ const eventFiles = fs
   .readdirSync(path.join(__dirname, 'events'))
   .filter((file) => file.endsWith('.ts') || file.endsWith('.js'));
 
-for (const file of eventFiles) {
-  const filePath = path.join(__dirname, 'events', file);
-  import(filePath).then((module) => {
+(async () => {
+  for (const file of eventFiles) {
+    const filePath = path.join(__dirname, 'events', file);
+    const module = await import(filePath);
     const event = module.default;
     if (event.once) {
       client.once(event.name, (...args) => event.execute(...args, client));
     } else {
       client.on(event.name, (...args) => event.execute(...args, client));
     }
-  });
-}
+  }
 
-connectDB(); //db connect
+  await connectDB(); //db connect
 
-client.login(TOKEN);
+  await client.login(TOKEN);
+})();
