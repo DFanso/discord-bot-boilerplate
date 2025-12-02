@@ -1,10 +1,15 @@
 import { REST } from '@discordjs/rest';
-import { Routes } from 'discord-api-types/v9';
+import { Routes } from 'discord-api-types/v10';
 import fs from 'fs';
 import path from 'path';
-import config from '../config.json';
+import dotenv from 'dotenv';
+dotenv.config();
 
-const { CLIENT_ID, TOKEN } = config;
+const { CLIENT_ID, TOKEN } = process.env;
+
+if (!TOKEN || !CLIENT_ID) {
+  throw new Error('Missing TOKEN or CLIENT_ID in environment variables');
+}
 
 interface Command {
   data: {
@@ -37,7 +42,7 @@ for (const folder of commandFolders) {
   }
 }
 
-const rest = new REST({ version: '9' }).setToken(TOKEN);
+const rest = new REST({ version: '10' }).setToken(TOKEN);
 
 (async () => {
   try {

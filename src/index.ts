@@ -1,12 +1,16 @@
 import { Client, GatewayIntentBits } from 'discord.js';
 import fs from 'fs';
 import path from 'path';
-import config from './config.json';
+
 import connectDB from './utils/database';
 import dotenv from 'dotenv';
 dotenv.config();
 
-const { TOKEN } = config;
+const TOKEN = process.env.TOKEN;
+
+if (!TOKEN) {
+  throw new Error('Missing TOKEN in environment variables');
+}
 
 const client = new Client({
   intents: [
@@ -19,7 +23,6 @@ const client = new Client({
     GatewayIntentBits.GuildMembers,
     GatewayIntentBits.GuildVoiceStates,
     GatewayIntentBits.AutoModerationExecution,
-    GatewayIntentBits.GuildIntegrations,
   ],
 });
 
