@@ -3,13 +3,14 @@ import {
   ModalSubmitInteraction,
   ButtonInteraction,
   Client,
-  Interaction
+  Interaction,
+  Events
 } from 'discord.js';
 import { readdirSync } from 'fs';
 import { join } from 'path';
 
-module.exports = {
-  name: 'interactionCreate',
+export default {
+  name: Events.InteractionCreate,
   async execute(interaction: Interaction, client: Client) {
     if (
       !interaction.isCommand() &&
@@ -21,7 +22,8 @@ module.exports = {
     if (interaction.isCommand()) {
       try {
         const commandPath = join(__dirname, '../commands', `${interaction.commandName}.ts`);
-        const command = require(commandPath);
+        const module = await import(commandPath);
+        const command = module.default || module;
         await command.execute(interaction as CommandInteraction);
       } catch (error) {
         console.error(error);

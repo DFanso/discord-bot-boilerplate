@@ -27,16 +27,20 @@ const client = new Client({
 });
 
 // Dynamically read event files
-const isDevelopment = process.env.NODE_ENV === 'development';
-const fileExtension = isDevelopment ? '.ts' : '.js';
-
 const eventFiles = fs
   .readdirSync(path.join(__dirname, 'events'))
-  .filter((file) => file.endsWith(fileExtension));
+  .filter((file) => file.endsWith('.ts') || file.endsWith('.js'));
 
 for (const file of eventFiles) {
-  const event = require(path.join(__dirname, 'events', file));
-  client.on(event.name, (...args) => event.execute(...args, client));
+  const filePath = path.join(__dirname, 'events', file);
+  import(filePath).then((module) => {
+    const event = module.default;
+    if (event.once) {
+      client.once(event.name, (...args) => event.execute(...args, client));
+    } else {
+      client.on(event.name, (...args) => event.execute(...args, client));
+    }
+  });
 }
 
 connectDB(); //db connect
